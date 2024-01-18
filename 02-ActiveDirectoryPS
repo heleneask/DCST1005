@@ -1,0 +1,30 @@
+Get-Command -Module ActiveDirectory | Where-Object {$_.name -like "*user*"}
+Get-Command -Module ActiveDirectory | Where-Object {$_.name -like "*group*"}
+Get-Command -Module ActiveDirectory | Where-Object {$_.name -like "*OrganizationalUnit*"}
+
+New-ADOrganizationalUnit "TestOU" `
+            -Description "TEst for å sjekk at cmdlet fungerer" `
+            -ProtectedFromAccidentalDeletion:$false
+Get-ADOrganizationalUnit -Filter * | Select-Object name
+Get-Help Remove-ADOrganizationalUnit -Online
+Get-ADOrganizationalUnit -Filter * | Where-Object {$_.name -eq "TestOU"} | Remove-ADOrganizationalUnit -Recursive -Confirm:$false
+
+
+#For bedrift InfraIT
+$lit_users = "InfraIT_Users"
+$lit_groups = "InfraIT_Groups"
+$lit_computers = "InfraIT_Computers"
+
+$topOUs = @($lit_users,$lit_groups,$lit_computers )
+$departments = @('HR','IT','Sales','Finance','Consultants')
+
+foreach ($ou in $topOUs) {
+    New-ADOrganizationalUnit $ou -Description "Top OU for InfraIT" -ProtectedFromAccidentalDeletion:$false
+    $topOU = Get-ADOrganizationalUnit -Filter * | Where-Object {$_.name -eq "$ou"}
+        foreach ($department in $departments) {
+            New-ADOrganizationalUnit $department `
+                        -Path $topOU.DistinguishedName `
+                        -Description "Deparment OU for $department in topOU $topOU" `
+                        -ProtectedFromAccidentalDeletion:$false
+        }
+}
