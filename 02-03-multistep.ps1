@@ -1,7 +1,7 @@
 # Functions: Convert-SpecialCharacters, New-Username, New-UserPrincipalName, New-Password, Get-UserOU
 function Convert-SpecialCharacters {
     param(
-        [string]$givenName,
+        [string]$GivenName,
         [string]$surName
     )
 
@@ -13,7 +13,7 @@ function Convert-SpecialCharacters {
 
         # Define replacements
         $replacements = @{
-            'ø' = 'o';
+            'ø' = 'o'; 
             'å' = 'a';
             'æ' = 'ae';
             'é' = 'e'
@@ -27,8 +27,8 @@ function Convert-SpecialCharacters {
         return $inputString
     }
 
-    # Apply replacements to givenName and surName
-    $convertedGivenName = New-Characters -inputString $givenName.ToLower()
+    # Apply replacements to GivenName and surName
+    $convertedGivenName = New-Characters -inputString $GivenName.ToLower()
     $convertedSurName = New-Characters -inputString $surName.ToLower()
 
     # Return the converted names
@@ -39,24 +39,24 @@ function Convert-SpecialCharacters {
 }
 function New-Username {
     param(
-        [string]$givenName,
+        [string]$GivenName,
         [string]$surName
     )
 
     # Ensure that the names are trimmed to remove any extra whitespace
-    $givenName = $givenName.Trim()
+    $GivenName = $GivenName.Trim()
     $surName = $surName.Trim()
 
     # Initialize variables to hold the parts of the username
-    $givenNamePart = ""
+    $GivenNamePart = ""
     $surNamePart = ""
 
-    # Determine the givenName part
-    if ($givenName.Length -lt 3) {
-        $givenNamePart = $givenName
+    # Determine the GivenName part
+    if ($GivenName.Length -lt 3) {
+        $GivenNamePart = $GivenName
     } else {
-        $givenNamePart = $givenName.Substring(0, 3)
-        $givenNamePart = $givenNamePart.Trim()
+        $GivenNamePart = $GivenName.Substring(0, 3)
+        $GivenNamePart = $GivenNamePart.Trim()
     }
 
     # Determine the surName part
@@ -68,7 +68,7 @@ function New-Username {
     }
 
     # Combine to form the username
-    $userName = $givenNamePart + $surNamePart
+    $userName = $GivenNamePart + $surNamePart
 
     return $userName.ToLower() # Converting to lower case for standardization
 
@@ -76,20 +76,20 @@ function New-Username {
 }
 function New-UserPrincipalName {
     param (
-        [Parameter(Mandatory=$true)][string] $givenName,
+        [Parameter(Mandatory=$true)][string] $GivenName,
         [Parameter(Mandatory=$true)][string] $surName
     )
 
-    if ($givenName -match $([char]32)) {
-        $splitted = $givenName.Split($([char]32))
-        $givenName = $splitted[0]
+    if ($GivenName -match $([char]32)) {
+        $splitted = $GivenName.Split($([char]32))
+        $GivenName = $splitted[0]
 
         for ( $index = 1 ; $index -lt $splitted.Length ; $index ++ ) {
-            $givenName += ".$($splitted[$index][0])"
+            $GivenName += ".$($splitted[$index][0])"
         }
     }
 
-    $UserPrincipalName = $("$($givenName).$($surName)").ToLower()
+    $UserPrincipalName = $("$($GivenName).$($surName)").ToLower()
 
     Return $UserPrincipalName
 
@@ -143,24 +143,24 @@ function Get-UserOU {
     return $ouPath
 }
 
-$rootFolder = "C:\git-projects\dcst1005\"
+$rootFolder = "C:\git-projects\dcst1005"
 
 # CSV-file with users
-$Users = Import-Csv -Path "$rootFolder\tmp_csv-users-example.csv" -Delimiter ","
+$users = Import-Csv -Path "$rootFolder\02-03-tmp-users.csv" -Delimiter ","
 
 # Initialize arrays to store the results
 $usersCreated = @()
 $usersNotCreated = @()
 
 foreach ($user in $users) {
-    $newNames = Convert-SpecialCharacters -givenName $user.givenName -surName $user.surName
+    $newNames = Convert-SpecialCharacters -GivenName $user.GivenName -surName $user.surName
     #Write-Host $newNames.ConvertedGivenName -ForegroundColor Green
     #Write-Host $newNames.ConvertedSurName -ForegroundColor Green
 
-    $newusername = New-Username -givenName $newNames.ConvertedGivenName -surName $newNames.ConvertedSurName
+    $newusername = New-Username -GivenName $newNames.ConvertedGivenName -surName $newNames.ConvertedSurName
     #Write-Host $newusername -ForegroundColor Cyan
 
-    $upn = New-UserPrincipalName -givenName $newNames.ConvertedGivenName -surName $newNames.ConvertedSurName
+    $upn = New-UserPrincipalName -GivenName $newNames.ConvertedGivenName -surName $newNames.ConvertedSurName
     #Write-Host $upn -ForegroundColor DarkYellow
 
     $password = New-Password
@@ -183,11 +183,11 @@ foreach ($user in $users) {
                 Write-Host "Creating user $newusername" -ForegroundColor Green
                 New-ADUser -SamAccountName $newusername `
                             -UserPrincipalName $upn `
-                            -Name "$($user.givenName) $($user.surName)" `
-                            -GivenName $user.givenName `
+                            -Name "$($user.GivenName) $($user.surName)" `
+                            -GivenName $user.GivenName `
                             -Surname $user.surName `
                             -Enabled $true `
-                            -DisplayName "$($user.givenName) $($user.surName)" `
+                            -DisplayName "$($user.GivenName) $($user.surName)" `
                             -Department $user.Department `
                             -Path $ou.DistinguishedName `
                             -AccountPassword $password

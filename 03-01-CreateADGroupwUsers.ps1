@@ -1,8 +1,8 @@
 # Root folder for the project
-$rootFolder = "C:\git-projects\dcst1005\"
+$rootFolder = "C:\git-projects\DCST1005"
 
 # CSV-file with users
-$groups = Import-Csv -Path "$rootFolder\03-01-global-groups-example.csv" -Delimiter ","
+$groups = Import-Csv -Path "$rootFolder\02-03-tmp-users.csv" -Delimiter ","
 
 # Initialize arrays to store the results
 $groupsCreated = @()

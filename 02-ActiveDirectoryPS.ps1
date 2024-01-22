@@ -112,3 +112,10 @@ Get-ADOrganizationalUnit -Filter * -Properties CanonicalName | ForEach-Object {
     }
     Write-Host ""
 }
+
+
+
+#
+foreach ($user in $users) {
+    Remove-ADUser -Identity $user.username -Confirm:$false
+}
