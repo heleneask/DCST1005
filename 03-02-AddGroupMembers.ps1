@@ -1,5 +1,5 @@
 # Root folder for the project
-$rootFolder = "C:\git-projects\dcst1005\DCST1005"
+$rootFolder = "C:\git-projects\DCST1005"
 
 # CSV-file with users
 $users = Import-Csv -Path "$rootFolder\02-03-tmp-users.csv" -Delimiter ","

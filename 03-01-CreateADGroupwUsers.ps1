@@ -2,7 +2,7 @@
 $rootFolder = "C:\git-projects\DCST1005"
 
 # CSV-file with users
-$groups = Import-Csv -Path "$rootFolder\02-03-tmp-users.csv" -Delimiter ","
+$groups = Import-Csv -Path "$rootFolder\03-01-global-groups-ex.csv" -Delimiter ","
 
 # Initialize arrays to store the results
 $groupsCreated = @()
