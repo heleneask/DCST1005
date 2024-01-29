@@ -2,16 +2,16 @@
 $rootFolder = "C:\git-projects\DCST1005"
 
 # CSV-file with users
-$groups = Import-Csv -Path "$rootFolder\03-01-global-groups-ex.csv" -Delimiter ","
+$groups = Import-Csv -Path "$rootFolder\03-01-local-groups.csv" -Delimiter ","
 
 # Initialize arrays to store the results
 $groupsCreated = @()
 $groupsNotCreated = @()
 $groupExists = @()
 
-# Create global groups
+# Create local groups
 foreach ($group in $groups) {
-    $group = "g_" + $group.group
+    $group = "l_" + $group.group
     $existingGroup = Get-ADGroup -Filter "Name -eq '$group'"
     # Conditional statement used to check if the variable $existingGroup has a value that is considered 'true'
     if ($existingGroup) {
@@ -21,7 +21,7 @@ foreach ($group in $groups) {
         else {
             try {
                 Write-Host "Creating group $group" -ForegroundColor Green
-                New-ADGroup -Name $group -GroupScope Global -GroupCategory Security -Path "OU=InfraIT_Groups , DC=InfraIT , DC=sec"
+                New-ADGroup -Name $group -GroupScope DomainLocal -GroupCategory Security -Path "OU=InfraIT_Groups,DC=InfraIT,DC=sec"
                 $groupsCreated += $group
             }
             catch {
