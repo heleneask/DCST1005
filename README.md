@@ -1,2 +1,2 @@
 # DCST1005
-# test
+# PowerShell-scripts brukt i emnet DCST1005 Infrastruktur - Sikre Grunntjenester 
