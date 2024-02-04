@@ -12,7 +12,7 @@ Invoke-Command -ComputerName srv1 -ScriptBlock {
 # it is treated as a single argument, not as an array. 
 # This can lead to unexpected behavior in the script block, particularly in how the foreach loop is processed.
 # To avoid this, you can use the unary comma operator (,) to force the array to be treated as a collection of arguments.
-$departments = @("HR", "Consultant", "Finance", "IT", "Sales", "Shared")
+$departments = @("HR", "Consultants", "Finance", "IT", "Sales", "Shared")
 
 Invoke-Command -ComputerName srv1 -ScriptBlock {
     param([string[]]$departments)
