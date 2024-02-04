@@ -3,7 +3,7 @@
 ##########################################################
 
 # Define the shared folders (names used in 04-02-installDFSNamespace.ps1)
-$SharedFolders = @("FilesShare", "HR-Share", "Consultant-Share", "Finance-Share", "IT-Share", "Sales-Share", "Shared-Share")
+$SharedFolders = @("FilesShare", "HR-Share", "Consultants-Share", "Finance-Share", "IT-Share", "Sales-Share", "Shared-Share")
 
 # Script block to be executed on the remote server
 Invoke-Command -ComputerName srv1 -ScriptBlock {
